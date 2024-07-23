@@ -6,13 +6,9 @@ class CrudRepository{
     }
     // data -> {col: value, ...}
     async create(data){
-        try {
-            const response = await this.model.create(data);
-            return response;
-        } catch (error) {
-            console.log("Something went wrong in : create");
-            throw error;
-        }
+        const response = await this.model.create(data);
+        return response;
+        
     }
     async get(id){
         try {
