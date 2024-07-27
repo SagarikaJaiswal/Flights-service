@@ -1,6 +1,6 @@
 const success = {
     sucess: true,
-    message: "Successfully com[leted the request",
+    message: "Successfully completed the request",
     data: {},
     error: {}
 }
