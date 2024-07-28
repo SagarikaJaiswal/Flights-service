@@ -24,7 +24,11 @@ class CrudRepository{
         return response;
     }
     async update(id, data){
-        const response = await this.model.update(data, {where: {id: id}});
+        const [affectedCount] = await this.model.update(data, {where: {id: id}});
+        console.log(affectedCount);
+        if(!affectedCount){
+            throw new AppError("The resource you tried to update does not exist", StatusCodes.NOT_FOUND);
+        }
         return response;
     }
     async destroy(id){
