@@ -1,8 +1,9 @@
 const express  = require("express");
 const { CityController } = require("../../controllers");
+const { CityMiddleware  } = require("../../middlewares");
 const cityRouter = express.Router();
 
-cityRouter.post('/', CityController.createCity);
+cityRouter.post('/', CityMiddleware.validateCityCreateRequest, CityController.createCity);
 cityRouter.get('/', CityController.getCities);
 cityRouter.get('/:id', CityController.getCity);
 cityRouter.delete('/:id', CityController.destroyCity);
