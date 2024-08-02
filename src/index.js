@@ -31,5 +31,5 @@ app.listen(ServerConfig.PORT, async () => {
     //     where: {
     //         id: 2
     //     }
-    // })   /
+    // })   
 });
