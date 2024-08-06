@@ -52,6 +52,13 @@ function validateFlightCreateRequest(req, res, next){
         .status(StatusCodes.BAD_REQUEST)
         .json(ErrorResponse);
     }
+    if(!req.body.price){
+        ErrorResponse.message = "Something went wrong while creating the airplane";
+        ErrorResponse.error =  new AppError(["Price not found in incoming request"], StatusCodes.BAD_REQUEST);
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json(ErrorResponse);
+    }
     next();
 }
 

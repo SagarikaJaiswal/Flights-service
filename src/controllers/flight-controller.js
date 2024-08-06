@@ -13,7 +13,8 @@ async function createFlight(req, res){
             arrivalTime: req.body.arrivalTime,
             departureTime: req.body.departureTime,
             boardingGate: req.body.boardingGate,
-            totalSeats: req.body.totalSeats
+            totalSeats: req.body.totalSeats,
+            price: req.body.price
         });
         SuccessResponse.data = flight;
         return res
@@ -27,6 +28,21 @@ async function createFlight(req, res){
     }
 }
 
+async function getAllFlights(req, res){
+    try {
+        const flights = await FlightService.getAllFlights(req.query);
+        SuccessResponse.data = flights;
+        return res
+        .status(StatusCodes.OK)
+        .json(SuccessResponse);
+    } catch (error) {
+        ErrorResponse.error = error;
+        return res
+        .status(error.statusCode)
+        .json(ErrorResponse);
+    }
+}
 module.exports = {
-    createFlight
+    createFlight,
+    getAllFlights
 }
