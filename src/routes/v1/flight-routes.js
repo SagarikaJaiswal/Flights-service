@@ -7,6 +7,17 @@ flightRouter.post('/',
     FlightMiddleware.validateFlightCreateRequest, 
     FlightController.createFlight);
 
-flightRouter.get("/", FlightController.getAllFlights);
-flightRouter.get("/:id", FlightController.getFlight);
+flightRouter.get("/", 
+    FlightController.getAllFlights
+);
+
+flightRouter.get("/:id", 
+    FlightController.getFlight
+);
+
+flightRouter.patch("/:id/seats",
+    FlightMiddleware.validateUpdateSeatRequest,
+    FlightController.updateSeats
+);
+
 module.exports = flightRouter;
