@@ -1,10 +1,13 @@
 const express = require('express');
-
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./config/swagger-config');
 const { ServerConfig } = require('./config');
 const router = require('./routes');
 const { where } = require('sequelize');
 
 const app = express();
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -13,6 +16,7 @@ app.use('/api', router);
 
 app.listen(ServerConfig.PORT, async () => {
     console.log(`Successfully started the server on PORT : ${ServerConfig.PORT}`);
+    console.log(`Swagger docs at http://localhost:${ServerConfig.PORT}/api-docs`);
     //bad code alert
     // const { Cities, Airport} = require("./models");
     // const bombay = await Cities.findByPk(2);

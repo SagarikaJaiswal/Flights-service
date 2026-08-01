@@ -1,0 +1,291 @@
+openapi: 3.0.0
+info:
+  title: Flights Service API
+  version: 1.0.0
+  description: >
+    REST API for managing cities, airports, airplanes, and flights.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development server
+
+tags:
+  - name: Cities
+  - name: Airports
+  - name: Airplanes
+  - name: Flights
+
+paths:
+  /cities:
+    get:
+      tags: [Cities]
+      summary: List all cities
+      responses:
+        '200':
+          description: Cities fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityListResponse'
+    post:
+      tags: [Cities]
+      summary: Create a new city
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityInput'
+      responses:
+        '201':
+          description: City created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /cities/{id}:
+    get:
+      tags: [Cities]
+      summary: Get a city by ID
+      parameters:
+        - $ref: '#/components/parameters/CityId'
+      responses:
+        '200':
+          description: City fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Cities]
+      summary: Delete a city by ID
+      parameters:
+        - $ref: '#/components/parameters/CityId'
+      responses:
+        '200':
+          description: City deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /airports:
+    get:
+      tags: [Airports]
+      summary: List all airports
+      responses:
+        '200':
+          description: Airports fetched successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Airport'
+    post:
+      tags: [Airports]
+      summary: Create a new airport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AirportInput'
+      responses:
+        '201':
+          description: Airport created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Airport'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /flights:
+    get:
+      tags: [Flights]
+      summary: Search flights
+      parameters:
+        - name: srcAirportId
+          in: query
+          schema:
+            type: integer
+        - name: destAirportId
+          in: query
+          schema:
+            type: integer
+        - name: departureDate
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Flights matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flight'
+    post:
+      tags: [Flights]
+      summary: Create a new flight
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FlightInput'
+      responses:
+        '201':
+          description: Flight created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flight'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  parameters:
+    CityId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Bengaluru
+
+    CityInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          example: Bengaluru
+
+    CityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/City'
+
+    CityListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+
+    Airport:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        cityId:
+          type: integer
+
+    AirportInput:
+      type: object
+      required: [name, address, cityId]
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        cityId:
+          type: integer
+
+    Flight:
+      type: object
+      properties:
+        id:
+          type: integer
+        flightNumber:
+          type: string
+        airplaneId:
+          type: integer
+        srcAirportId:
+          type: integer
+        destAirportId:
+          type: integer
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        price:
+          type: number
+          format: float
+
+    FlightInput:
+      type: object
+      required: [flightNumber, airplaneId, srcAirportId, destAirportId, departureTime, arrivalTime, price]
+      properties:
+        flightNumber:
+          type: string
+        airplaneId:
+          type: integer
+        srcAirportId:
+          type: integer
+        destAirportId:
+          type: integer
+        departureTime:
+          type: string
+          format: date-time
+        arrivalTime:
+          type: string
+          format: date-time
+        price:
+          type: number
+          format: float
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+        error:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Invalid request payload
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
